@@ -76,7 +76,22 @@ function startPrompt() {
           console.log("");
           console.log(res[0].name + " purchased");
           console.log("price " +"$"+ res[0].price);
-          }
+
+          var newQuantity = res[0].stock_quantity - number;
+          connection.query(
+            "UPDATE products SET stock_quantity = " +
+              newQuantity +
+              " WHERE id = " +
+              res[0].id,
+            function(err, resUpdate) {
+              if (err) throw err;
+              console.log("");
+              console.log("Your Order has been Processed");
+              console.log("Thank you for Shopping with us...!");
+              console.log("");
+              connection.end();
+            }
+          )}
       })
      }
    })
