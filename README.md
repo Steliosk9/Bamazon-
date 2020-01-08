@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Bamazon
 
 ## Description
@@ -50,3 +51,16 @@ You can download and watch the demo of the Bamazon customer and manager interfac
 
 [Bamazon Demo](https://drive.google.com/open?id=0Bz24wWbZ1MCcdHpYRmhWRldGeWc)
 
+=======
+
+
+# Bamazon-Cli-App
+
+<hr>
+
+##  Amazon-like storefront app 
+
+The client will see an up to date list of items for sale .The list includes the products name ,quantity and the price.
+The client will be able to select an item or items to purchase, have their transaction total calculated,
+and update the database to reflect the change in stock .
+>>>>>>> 310184588454458e8243a93ed6bd9381a0848e09
