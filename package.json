@@ -1,46 +1,27 @@
 {
   "name": "bamazon",
   "version": "1.0.0",
-<<<<<<< HEAD
-  "description": "Bamazon",
-=======
-  "description": "Week 12 Homework",
->>>>>>> 67c9e85039e704b6da70667bb804c4b8b2ad95df
+  "description": "GT Homework week 12",
   "main": "bamazonCustomer.js",
-  "dependencies": {
-    "chalk": "^2.3.0",
-    "cli-table": "^0.3.1",
-    "inquirer": "^4.0.1",
-    "mysql": "^2.15.0"
-  },
-  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "none"
   },
   "repository": {
     "type": "git",
-<<<<<<< HEAD
-    "url": "git+https://github.com/rgoderis/bamazon.git"
-=======
-    "url": "git+https://github.com/chzwzrd/Bamazon.git"
->>>>>>> 67c9e85039e704b6da70667bb804c4b8b2ad95df
+    "url": "git+https://github.com/amacwhirter/bamazon.git"
   },
-  "author": "ryan goderis",
+  "keywords": [
+    "none"
+  ],
+  "author": "adm",
   "license": "ISC",
   "bugs": {
-<<<<<<< HEAD
-    "url": "https://github.com/rgoderis/bamazon/issues"
+    "url": "https://github.com/amacwhirter/bamazon/issues"
   },
-  "homepage": "https://github.com/rgoderis/bamazon#readme",
+  "homepage": "https://github.com/amacwhirter/bamazon#readme",
   "dependencies": {
     "cli-table": "^0.3.1",
-    "color": "^3.1.2",
-    "inquirer": "^7.0.0",
-    "mysql": "^2.17.1"
+    "inquirer": "^3.0.6",
+    "mysql": "^2.13.0"
   }
-=======
-    "url": "https://github.com/chzwzrd/Bamazon/issues"
-  },
-  "homepage": "https://github.com/chzwzrd/Bamazon#readme"
->>>>>>> 67c9e85039e704b6da70667bb804c4b8b2ad95df
 }
