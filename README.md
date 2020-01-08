@@ -1,66 +1,150 @@
-<<<<<<< HEAD
-# Bamazon
+# Bamazon <a id="top"></a>
+Week 12 Homework
 
-## Description
+___
 
-This application implements a simple command line based storefront using the npm [inquirer](https://www.npmjs.com/package/inquirer) package and the MySQL database backend together with the npm [mysql](https://www.npmjs.com/package/mysql) package. The application presents two interfaces: **customer** and **manager**.
+## Overview
+Simple command line storefront with two functionalities:
 
-### MySQL Database Setup
+* [**Customer**](#customer-demo)
+	* allows user to view and purchase products
+* [**Manager**](#manager-demo)
+	* allows user to view, update, add, and remove products
 
-In order to run this application, you should have the MySQL database already set up on your machine. If you don't, visit the [MySQL installation page](https://dev.mysql.com/doc/refman/5.6/en/installing.html) to install the version you need for your operating system. Once you have MySQL isntalled, you will be able to create the *Bamazon* database and the *products* table with the SQL code found in [Bamazon.sql](Bamazon.sql). Run this code inside your MySQL client like [Sequel Pro](https://www.sequelpro.com/) to populate the database, then you will be ready to proceed with running the Bamazon customer and manager interfaces.
+___
 
-### Customer Interface
+## Setup
+To run this application, you will need [MySQL](https://dev.mysql.com/doc/refman/5.6/en/installing.html) and [Node JS](https://nodejs.org/en/download/) installed on your computer.
 
-The customer interface allows the user to view the current inventory of store items: item IDs, descriptions, department in which the item is located and price. The user is then able to purchase one of the existing items by entering the item ID and the desired quantity. If the selected quantity is currently in stock, the user's order is fulfilled, displaying the total purchase price and updating the store database. If the desired quantity is not available, the user is prompted to modify their order.
+#### MySQL Database Setup (Instructions by [angrbrd](https://github.com/angrbrd/))
+If you do not have MySQL database already set up on your machine, visit the [MySQL installation page](https://dev.mysql.com/doc/refman/5.6/en/installing.html) to install the version you need for your operating system. Once you have MySQL installed, you will be able to create the *Bamazon* database and the *products* table with the SQL code found in [bamazon.sql](bamazon.sql). Run this code inside your MySQL client (like [Sequel Pro](https://www.sequelpro.com/) or [MySQL Workbench](https://dev.mysql.com/downloads/workbench/)) to populate the database, then you will be ready to proceed with running the Bamazon customer and manager interfaces.
 
-To run the customer interface please follow the steps below:
+#### Run Application
+Once you have the Bamazon database set up, run these commands in the command line:
 
-	git clone git@github.com:angrbrd/bamazon.git
-	cd bamazon
-	npm install
-	node bamazonCustomer.js
+```
+git clone https://github.com/chzwzrd/Bamazon.git
+cd Bamazon
+npm install
+node bamazonCustomer.js
+```
+Note: type `node bamazonManager.js` to access the manager portal
 
-### Manager Interace
+___
 
-The manager interface presents a list of four options, as below. 
+## Customer Demo <a id="customer-demo"></a>
+The customer interface:
 
-	? Please select an option: (Use arrow keys)
-	❯ View Products for Sale 
-	  View Low Inventory 
-	  Add to Inventory 
-	  Add New Product
-	  
-The **View Products for Sale** option allows the user to view the current inventory of store items: item IDs, descriptions, department in which the item is located, price, and the quantity available in stock. 
+```
+1) Presents the customer with a table of all available products
+2) Asks for the ID of the customer's desired product
+3) Asks how many items the customer would like to purchase
+4) Confirms order & updates product inventory in database
+```
+![customer demo][1_bamazonCustomer]
 
-The **View Low Inventory** option shows the user the items which currently have fewer than 100 units available.
+[Scroll to top](#top)
 
-The **Add to Inventory** option allows the user to select a given item ID and add additional inventory to the target item.
+___
 
-The **Add New Product** option allows the user to enter details about a new product which will be entered into the database upon completion of the form.
+## Manager Demo <a id="manager-demo"></a>
+The manager interface presents a list of actions:
 
-To run the manager interface please follow the steps below:
+![manager demo: list of actions][2_bamazonManager]
 
-	git clone git@github.com:angrbrd/bamazon.git
-	cd bamazon
-	npm install
-	node bamazonManager.js
+___
 
-### Bamazon Demo
+```
+1) View Products for Sale
+Displays a table of all active products available to the customer
+```
+![manager demo: view active products][3_bamazonManager]
 
-You can download and watch the demo of the Bamazon customer and manager interfaces at the link below. Make sure to download the video, as opposed to watching it in your Browser, which will display a compressed version making the CLI output illegible.
-
-[Bamazon Demo](https://drive.google.com/open?id=0Bz24wWbZ1MCcdHpYRmhWRldGeWc)
-
-=======
+___
 
 
-# Bamazon-Cli-App
+```
+2) View Low Inventory
+Displays a table of all products with fewer than 5 items in stock
+(or a message that there are no low-stock items)
+```
+![manager demo: view low inventory][4_bamazonManager]
 
-<hr>
+___
 
-##  Amazon-like storefront app 
+```
+3) Add to Inventory
+Allows the manager to add more items to a product's inventory
+```
+![manager demo: add to inventory][5_bamazonManager]
 
-The client will see an up to date list of items for sale .The list includes the products name ,quantity and the price.
-The client will be able to select an item or items to purchase, have their transaction total calculated,
-and update the database to reflect the change in stock .
->>>>>>> 310184588454458e8243a93ed6bd9381a0848e09
+___
+
+```
+4) Add New Product
+Allows the manager to list a new product that is available for purchase
+```
+![manager demo: add new product][6_bamazonManager]
+
+___
+
+```
+5) Remove A Product
+Allows the manager to remove a product from the store
+```
+![manager demo: remove a product][7_bamazonManager]
+
+[Scroll to top](#top)
+
+___
+
+## Technologies Used
+* JavaScript
+*  [Node JS](https://nodejs.org/en/download/)
+* [MySQL](https://dev.mysql.com/doc/refman/5.6/en/installing.html)
+* NPM Packages:
+	- [mysql](https://www.npmjs.com/package/mysql)
+	- [inquirer](https://www.npmjs.com/package/inquirer)
+	- [chalk](https://www.npmjs.com/package/chalk)
+	- [cli-table](https://www.npmjs.com/package/cli-table)
+
+___
+
+## Contributors
+[Melodie Chi](https://github.com/chzwzrd/) (Inspiration for this README is credited to: [angrbrd](https://github.com/angrbrd/), [kellymersereau](https://github.com/kellymersereau), and [ramirolpz55](https://github.com/ramirolpz55))
+
+___
+
+## Contributing (Instructions by [ramirolpz55](https://github.com/ramirolpz55))
+To contribute to this application:
+1. Fork the repo
+2. Create your feature branch: `git checkout -b my-new-feature`
+3. Commit your changes: `git commit -m 'Add some feature'`
+4. Push to the branch: `git push origin my-new-feature`
+5. Submit a pull request
+
+___
+
+## License
+&copy; 2017 UCI Coding Bootcamp | Melodie Chi
+
+[1_bamazonCustomer]: 
+http://g.recordit.co/nYYlpy6D49.gif "customer demo"
+
+[2_bamazonManager]: 
+https://github.com/chzwzrd/Bamazon/blob/master/screenshots/2.png "list of actions"
+
+[3_bamazonManager]: 
+https://github.com/chzwzrd/Bamazon/blob/master/screenshots/3.png "view active products"
+
+[4_bamazonManager]: 
+https://github.com/chzwzrd/Bamazon/blob/master/screenshots/4.png "view low inventory"
+
+[5_bamazonManager]: 
+https://github.com/chzwzrd/Bamazon/blob/master/screenshots/5.png "add to inventory"
+
+[6_bamazonManager]: 
+https://github.com/chzwzrd/Bamazon/blob/master/screenshots/6.png "add new product"
+
+[7_bamazonManager]: 
+https://github.com/chzwzrd/Bamazon/blob/master/screenshots/7.png "remove a product"
