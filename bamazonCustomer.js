@@ -1,102 +1,93 @@
-var mysql = require("mysql");
-var inquirer = require("inquirer");
-var Table = require('cli-table3');
 
-var connection = mysql.createConnection({
-    host: "localhost",
+const mysql = require("mysql");
+const inquirer = require("inquirer");
+
+const connection = mysql.createConnection({
+    post: "localhost",
     port: 3306,
     user: "root",
     password: "",
-    database: "bamazon_db"
-  });
- 
-  connection.connect();
-
-   var display = function() {
-  connection.query("SELECT * FROM products",function(err,res){
-    if (err) throw err;
-    // console.log("connected as id " + connection.threadId);
-    console.log("");
-    console.log("========================");
-    console.log("Welcome to Bamazon");
-    console.log("========================");
-    console.log("");
- 
-  
-  // instantiate
-  var table = new Table({
-      head: ['Product id', 'Product Description','stock','Price']
-    , colWidths: [8, 30 ,20, 8]
-  });
-   
-  // table is an Array, so you can `push`, `unshift`, `splice` and friends
-  for(var i = 0; i < res.length; i++) {
-  table.push([res[i].id, res[i].name, res[i].stock_quantity, res[i].price]);
-  }
-
-  console.log(table.toString());
-  console.log("");
-     startPrompt();
+    database: "bamazon"
 });
 
-};
-   
-// display();
+connection.connect(function(err){
+    if(err) throw err
+    console.log("connected")
+    startBamazon()
+});
 
+function startBamazon(){
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "please select [Products] to view and purcase products or [Exit] to exit application",
+            choices: ["Products", "Exit"],
+            name: "choice"
+        }
+    ]).then(function(answer){
+        if(answer.choice === "Products"){
+            loadProducts();
+        } else{
+            connection.end();
+        }
+    })
+}
 
-function startPrompt() {
+function loadProducts(){
+    // display all products available to purchase
+    connection.query("SELECT * FROM products", function(err, res){
+        if(err) throw err
+        console.table(res)
+        // run function to allow customer to purchase a product
+        buyProducts()
+    })
+}
 
-  inquirer.prompt([{
-
-    type: "input",
-    name: "product",
-    message: "please add the id of the product you are interesting to purchase"
-  }])
- .then(function(response){
-   var choise = response.product;
-   connection.query("SELECT * FROM products WHERE id =?",choise ,function(err,res){
-     if (err)throw err;
-     if (res.length === 0){
-       console.log("Product doesnt exist,please enter a valid choise");
-
-       startPrompt();
-
-     }else{
-      inquirer.prompt({
-        type:"Input",
-        name:"quantity",
-        message:"How many items would you like to purchase?"
-      })
-      .then(function(responseTwo){
-        var number = responseTwo.quantity;
-        if(number > res[0].stock_quantity){
-          console.log("oops!!!...Unfortunately we only have "+ res[0].stock_quantity +"Items from the selected product");
-          startPrompt();
-          } else {
-          console.log("");
-          console.log(res[0].name + " purchased");
-          console.log("price " +"$"+ res[0].price);
-
-          var newQuantity = res[0].stock_quantity - number;
-          connection.query(
-            "UPDATE products SET stock_quantity = " +
-              newQuantity +
-              " WHERE id = " +
-              res[0].id,
-            function(err, resUpdate) {
-              if (err) throw err;
-              console.log("");
-              console.log("Your Order has been Processed");
-              console.log("Thank you for Shopping with us...!");
-              console.log("");
-              connection.end();
-            }
-          )}
-      })
-     }
-   })
-  })
-} 
-
-display();
-
+function buyProducts(){
+    // prompt user with id of product they would like to purchase and amount
+    inquirer.prompt([
+        {
+            type: "input",
+            message: "What is the id of the product you would like to purchase?",
+            name: "productId"
+        },
+        {
+            type: "input",
+            messge: "How many would you like to purchase?",
+            name: "purchaseAmount"
+        }
+    ]).then(function(answers){
+        // retrieve stock_quantity by id
+        connection.query("SELECT * FROM products WHERE ?", {id: answers.productId}, function(err, res){
+            if(err) throw err
+            // if stock_quantity is >= answers.purchaseAmount
+            if(res[0].stock_quantity >= parseInt(answers.purchaseAmount)){
+                //  subtract stock_quantity by answers.purchaseAmount
+                var newQuantity = res[0].stock_quantity - parseInt(answers.purchaseAmount)
+                var totalSold = parseInt(answers.purchaseAmount) * res[0].price
+                var currentSales = res[0].product_sales
+                console.log("Price "+res[0].price)
+                console.log("purchase amount "+ parseInt(answers.purchaseAmount))
+                console.log(totalSold)
+                connection.query("UPDATE products SET ? WHERE ?",
+                [
+                        {
+                            stock_quantity: newQuantity,
+                            product_sales: totalSold + currentSales
+                        },
+                        {
+                            id: answers.productId
+                        }
+                ], function(err){
+                    if(err) throw err
+                    console.log("Item purchased")
+                    startBamazon()
+                })
+            } else{
+                // else log error message and run buyProducts()
+                console.log("You can't buy that many")
+                buyProducts()
+            }        
+        })
+    })  
+}

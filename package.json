@@ -1,24 +1,25 @@
 {
-  "name": "bamazon-",
+  "name": "bamazon",
   "version": "1.0.0",
-  "description": "Amazon-like storefront app",
+  "description": "Bamazon",
   "main": "bamazonCustomer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Steliosk9/Bamazon-.git"
+    "url": "git+https://github.com/rgoderis/bamazon.git"
   },
-  "author": "",
+  "author": "ryan goderis",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Steliosk9/Bamazon-/issues"
+    "url": "https://github.com/rgoderis/bamazon/issues"
   },
-  "homepage": "https://github.com/Steliosk9/Bamazon-#readme",
+  "homepage": "https://github.com/rgoderis/bamazon#readme",
   "dependencies": {
-    "cli-table3": "^0.5.1",
-    "inquirer": "^6.4.1",
+    "cli-table": "^0.3.1",
+    "color": "^3.1.2",
+    "inquirer": "^7.0.0",
     "mysql": "^2.17.1"
   }
 }
