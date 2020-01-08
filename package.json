@@ -1,24 +1,28 @@
 {
-  "name": "bamazon-",
+  "name": "bamazon",
   "version": "1.0.0",
-  "description": "Amazon-like storefront app",
+  "description": "A CLI-based storefront with the MySQL database backend.",
   "main": "bamazonCustomer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Steliosk9/Bamazon-.git"
+    "url": "git+https://github.com/angrbrd/bamazon.git"
   },
-  "author": "",
+  "keywords": [
+    "storefront",
+    "CLI-storefront",
+    "store"
+  ],
+  "author": "Anna D Derbakova",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Steliosk9/Bamazon-/issues"
+    "url": "https://github.com/angrbrd/bamazon/issues"
   },
-  "homepage": "https://github.com/Steliosk9/Bamazon-#readme",
+  "homepage": "https://github.com/angrbrd/bamazon#readme",
   "dependencies": {
-    "cli-table3": "^0.5.1",
-    "inquirer": "^6.4.1",
-    "mysql": "^2.17.1"
+    "inquirer": "^3.0.6",
+    "mysql": "^2.13.0"
   }
 }
