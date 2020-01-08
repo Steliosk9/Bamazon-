@@ -1,27 +1,25 @@
 {
   "name": "bamazon",
   "version": "1.0.0",
-  "description": "GT Homework week 12",
+  "description": "Bamazon",
   "main": "bamazonCustomer.js",
   "scripts": {
-    "test": "none"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/amacwhirter/bamazon.git"
+    "url": "git+https://github.com/rgoderis/bamazon.git"
   },
-  "keywords": [
-    "none"
-  ],
-  "author": "adm",
+  "author": "ryan goderis",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/amacwhirter/bamazon/issues"
+    "url": "https://github.com/rgoderis/bamazon/issues"
   },
-  "homepage": "https://github.com/amacwhirter/bamazon#readme",
+  "homepage": "https://github.com/rgoderis/bamazon#readme",
   "dependencies": {
     "cli-table": "^0.3.1",
-    "inquirer": "^3.0.6",
-    "mysql": "^2.13.0"
+    "color": "^3.1.2",
+    "inquirer": "^7.0.0",
+    "mysql": "^2.17.1"
   }
 }

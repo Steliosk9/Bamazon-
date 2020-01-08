@@ -1,205 +1,163 @@
-//=================================Setup Required Variables===============================
+const mysql = require("mysql");
+const inquirer = require("inquirer");
 
-var Table = require('cli-table');
-var mysql = require('mysql');
-var inquirer = require('inquirer');
-
-//=================================Connect to SQL database===============================
-
-var connection = mysql.createConnection({
-    host: "localhost",
+const connection = mysql.createConnection({
+    post: "localhost",
     port: 3306,
-
-    // Your username
     user: "root",
-
-    // Your password
-    password: "Z",
-    database: "bamazonDB"
+    password: "",
+    database: "bamazon"
 });
 
-connection.connect(function(err) {
-    if (err) throw err;
-    console.log("connected as id " + connection.threadId);
-    startPrompt();
+connection.connect(function(err){
+    if(err) throw err
+    console.log("connected");
+    bamazonManager()
 });
 
-//=================================Inquirer introduction===============================
+function bamazonManager(){
+    inquirer.prompt([
+        {
+            type: "list",
+            message: "please select what you would like to do",
+            choices: ["View All Products", "View Low Inventory", "Add to Inventory", "Add New Product", "Exit"],
+            name: "startChoice"
+        }
+    ]).then(function(answer){
+        switch(answer.startChoice){
+            // view products for sale
+            case "View All Products":
+                return view();
+            // view low inventory
+            case "View Low Inventory":
+                return lowInventory();
+            // add to inventory
+            case "Add to Inventory":
+                return addInventory();
+            // add new product
+            case "Add New Product":
+                return addProduct();
+            // exit bamazonManager
+            case "Exit":
+                return connection.end();
+        }
+    });
+}
 
-function startPrompt() {
+// function to view all products
+function view(){
+    connection.query("SELECT * FROM products", function(err, res){
+        if(err) throw err
+        console.table(res);
+        bamazonManager();
+    })
+}
 
-    inquirer.prompt([{
+// function to view all products with low inventory
+function lowInventory(){
+    connection.query("SELECT * FROM products WHERE stock_quantity < 10", function(err, res){
+        if(err) throw err
+        console.table(res);
+        bamazonManager();
+    })
+}
 
-        type: "list",
-        name: "actionList",
-        message: "Welcome Manager. What would you like to review?",
-        choices: ["View Products For Sale", "View Low Inventory", "Add To Inventory", "Add New Product"]
-
-    }]).then(function(user) {
-        if (user.actionList === "View Products For Sale") {
-            inventoryView();
-        } else if (user.actionList === "View Low Inventory") {
-            lowInventory();
-        } else if (user.actionList === "Add To Inventory") {
+// function to add to inventory
+function addInventory(){
+    inquirer.prompt([
+        {
+            type:"input",
+            message: "Please enter the id of the product you would like to add inventory to",
+            name: "productId"
+        },
+        {
+            type: "input",
+            message: "How much inventory would you like to add?",
+            name: "inventory"
+        }
+    ]).then(function(answers){
+        // check to see if answers.inventory is a number
+        if(isNaN(answers.inventory)){
+            console.log("Please enter a valid inventory number")
             addInventory();
-        } else {
-            addProduct();
+        // check to see if answers.productId is a number
+        } else if(isNaN(answers.productId)){
+            console.log("Please enter a valid productId")
+            addInventory();
+        } else{
+            // retrieve current inventory
+            connection.query("SELECT * FROM products WHERE ?", {id: answers.productId}, function(err, res){
+                if(err) throw err
+                let newInventory = parseInt(answers.inventory)+res[0].stock_quantity;
+                 // update inventory
+                connection.query("UPDATE products SET ? WHERE ?",
+                [
+                    {
+                        stock_quantity: newInventory
+                    },
+                    {
+                        id: answers.productId
+                    }
+                ], function(err){
+                    if(err) throw err
+                    console.log("Inventory added")
+                    bamazonManager();
+                })
+            })
         }
-    });
+    })
 }
 
-//=================================View Inventory===============================
-
-function inventoryView() {
-
-    // instantiate
-    var table = new Table({
-        head: ['ID', 'Item', 'Department', 'Price', 'Stock'],
-        colWidths: [10, 30, 30, 30, 30]
-    });
-
-    listInventory();
-
-    // table is an Array, so you can `push`, `unshift`, `splice` and friends
-    function listInventory() {
-
-        //Variable creation from DB connection
-
-        connection.query("SELECT * FROM products", function(err, res) {
-            for (var i = 0; i < res.length; i++) {
-
-                var itemId = res[i].item_id,
-                    productName = res[i].product_name,
-                    departmentName = res[i].department_name,
-                    price = res[i].price,
-                    stockQuantity = res[i].stock_quantity;
-
-                table.push(
-                    [itemId, productName, departmentName, price, stockQuantity]
-                );
+// function to add a new product
+function addProduct(){
+    connection.query("SELECT department_name FROM departments", function(err, res){
+        if(err) throw err
+        const departments = [];
+        for(var i = 0; i<res.length; i++){
+            departments.push(res[i].department_name)
+        }
+        inquirer.prompt([
+            {
+                type: "input",
+                message: "Enter the Product Name",
+                name: "productName"
+            },
+            {
+                type: "list",
+                message: "Select the Product Department",
+                choices: departments,
+                name: "productDepartment"
+            },
+            {
+                type: "input",
+                message: "Enter the Product Price",
+                name: "productPrice"
+            },
+            {
+                type: "input",
+                message: "Enter the Inventory Amount",
+                name: "productInventory"
             }
-            console.log("");
-            console.log("====================================================== Current Bamazon Inventory ======================================================");
-            console.log("");
-            console.log(table.toString());
-            console.log("");
-            startPrompt();
-        });
-    }
-}
+        ]).then(function(answers){
+            // check to see if productPrice and productInventory are a number
+            if(!isNaN(parseInt(answers.productPrice)) && !isNaN(parseInt(answers.productInventory))){
+                connection.query("INSERT INTO products SET?",
+                    {
+                        product_name: answers.productName,
+                        department: answers.productDepartment,
+                        price: answers.productPrice,
+                        stock_quantity: answers.productInventory
+                    }, function(err, res){
+                        if(err) throw err
+                        console.log("Product Added")
+                        bamazonManager();
+                    })
 
-//=================================View Low Inventory===============================
-
-//Connect to database to show any inventory with less than 5 in stock quantity
-
-function lowInventory() {
-    // instantiate
-    var table = new Table({
-        head: ['ID', 'Item', 'Department', 'Price', 'Stock'],
-        colWidths: [10, 30, 30, 30, 30]
-    });
-
-    listLowInventory();
-
-    // table is an Array, so you can `push`, `unshift`, `splice` and friends
-    function listLowInventory() {
-
-        connection.query("SELECT * FROM products", function(err, res) {
-            for (var i = 0; i < res.length; i++) {
-
-                //check if any of the stock_quantity equals 5 or less
-
-                if (res[i].stock_quantity <= 5) {
-
-                    var itemId = res[i].item_id,
-                        productName = res[i].product_name,
-                        departmentName = res[i].department_name,
-                        price = res[i].price,
-                        stockQuantity = res[i].stock_quantity;
-
-                    table.push(
-                        [itemId, productName, departmentName, price, stockQuantity]
-                    );
-                }
+            } else{
+                console.log("Please enter a valid price and inventory")
+                addProduct()
             }
-            console.log("");
-            console.log("============================================= Low Bamazon Inventory (5 or Less in Stock) ===============================================");
-            console.log("");
-            console.log(table.toString());
-            console.log("");
-            startPrompt();
-        });
-    }
+        })
+    });
 }
 
-//=================================Add Inventory===============================
-
-function addInventory() {
-
-    inquirer.prompt([{
-
-            type: "input",
-            name: "inputId",
-            message: "Please enter the ID number of the item you would like to add inventory to.",
-        },
-        {
-            type: "input",
-            name: "inputNumber",
-            message: "How many units of this item would you like to have in the in-store stock quantity?",
-
-        }
-    ]).then(function(managerAdd) {
-
-              connection.query("UPDATE products SET ? WHERE ?", [{
-
-                  stock_quantity: managerAdd.inputNumber
-              }, {
-                  item_id: managerAdd.inputId
-              }], function(err, res) {
-              });
-          startPrompt();
-        });
-      }
-
-
-//=================================Add New Product===============================
-
-function addProduct() {
-
-//ask user to fill in all necessary information to fill columns in table
-
-    inquirer.prompt([{
-
-            type: "input",
-            name: "inputName",
-            message: "Please enter the item name of the new product.",
-        },
-        {
-            type: "input",
-            name: "inputDepartment",
-            message: "Please enter which department name of which the new product belongs.",
-        },
-        {
-            type: "input",
-            name: "inputPrice",
-            message: "Please enter the price of the new product (0.00).",
-        },
-        {
-            type: "input",
-            name: "inputStock",
-            message: "Please enter the stock quantity of the new product.",
-        }
-
-    ]).then(function(managerNew) {
-
-      //connect to database, insert column data with input from user
-
-      connection.query("INSERT INTO products SET ?", {
-        product_name: managerNew.inputName,
-        department_name: managerNew.inputDepartment,
-        price: managerNew.inputPrice,
-        stock_quantity: managerNew.inputStock
-      }, function(err, res) {});
-      startPrompt();
-    });
-  }

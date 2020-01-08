@@ -1,27 +1,26 @@
-CREATE database bamazonDB;
-
-USE bamazonDB;
+DROP DATABASE IF EXISTS bamazon;
+CREATE DATABASE bamazon;
+USE bamazon;
 
 CREATE TABLE products (
-  item_id INT(10) AUTO_INCREMENT NOT NULL,
-  product_name VARCHAR(100) NOT NULL,
-  department_name VARCHAR(100) NOT NULL,
-  price DECIMAL(10,2) NOT NULL,
-  stock_quantity INT (100) NOT NULL,
-  PRIMARY KEY (item_id)
+id INT AUTO_INCREMENT NOT NULL,
+product_name VARCHAR(255) NOT NULL,
+department VARCHAR(255) NOT NULL,
+price DECIMAL(10, 2) NOT NULL,
+stock_quantity INT(10),
+PRIMARY KEY(id)
 );
 
-Select * from products;
+CREATE TABLE departments (
+department_id INT AUTO_INCREMENT NOT NULL,
+department_name VARCHAR(255) NOT NULL,
+over_head_costs DECIMAL(10, 2) NOT NULL,
+PRIMARY KEY(department_id)
+);
+INSERT INTO departments(department_name, over_head_costs)
+VALUES("AUTO", 1000000), ("Home and Garden", 1000), ("Electronics", 5000), ("Books", 500), ("Toys and Games", 1000);
 
-INSERT INTO products (product_name, department_name, price, stock_quantity)
-VALUES ("iPad", "Electronics", 700.00, 10),
-("XBox 1", "Electronics", 299.99, 8),
-("Keurig", "Kitchen", 45.00, 15),
-("Pokemon Cards", "Games", 5.00, 100),
-("'The Beatles' Vinyl Record", "Music", 100.00, 5),
-("Pogo Stick", "Outdoors", 30.00, 200),
-("Tent", "Camping", 80.00, 40),
-("Diamond Earrings", "Jewelry", 2000.00, 20),
-("iPhone 7 Case", "Electronics", 20.99, 100),
-("Curtains", "Home", 39.99, 72),
-("Car Mat - 4 Pack", "Automobile", 30.00, 107);
+INSERT INTO products(product_name, department, price, stock_quantity)
+VALUES("Corvette", "AUTO", 50000.00, 5), ("Garden Hose", "Home and Garden", 20.00, 100), ("PS4", "Electronics", 249.99, 50), ("Uncharted 4", "Electronics", 29.99, 100), ("Avengers Endgame", "Electronics", 19.99, 100), ("The Lord of the Rings: Fellowship of the Ring", "Books", 9.99, 100), ("Cataan", "Toys and Games", 40.00, 100), ("Pandemic", "Toys and Games", 35.00, 100), ("Shovel", "Home and Garden", 15.98, 100),("The Lord of the Rings: Return of the King", "Books", 12.99, 100);
+ALTER TABLE products
+ADD COLUMN product_sales DECIMAL(10, 2) DEFAULT 0;
